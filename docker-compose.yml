@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: kbhealthcare-mysql
+    environment:
+      MYSQL_DATABASE: kbhealthcare
+      MYSQL_USER: kbhealthcare
+      MYSQL_PASSWORD: kbhealthcare
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
