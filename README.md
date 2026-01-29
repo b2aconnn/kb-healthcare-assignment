@@ -198,30 +198,6 @@ erDiagram
     users ||--o{ monthly_summary : recordkey
 ```
 
-### 테이블 설명
-
-#### users 테이블
-- 사용자 정보 저장
-- email과 nickname에 유니크 제약 조건
-
-#### health_activity 테이블
-- 원본 헬스 활동 데이터 저장
-- Samsung Health와 Apple Health 데이터 수집
-
-#### daily_summary 테이블
-- 일별로 집계된 헬스 데이터
-- health_activity를 기반으로 자동 집계
-
-#### monthly_summary 테이블
-- 월별로 집계된 헬스 데이터
-- daily_summary를 기반으로 자동 집계
-
-### 데이터 흐름
-
-1. 클라이언트가 health_activity 데이터 저장
-2. 시스템이 자동으로 daily_summary로 집계
-3. 시스템이 자동으로 monthly_summary로 집계
-
 ## 데이터 조회 결과 제출
 ./aggerate 폴더에 csv 파일로 저장
 
