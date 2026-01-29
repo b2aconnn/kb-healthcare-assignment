@@ -146,27 +146,28 @@ Content-Type: application/json
 
 ```
 com.kbhealthcare.assignment/
-├── domain/                  # 도메인 영역
-│   ├── activity/          
-│   │   ├── HealthActivity.java
-│   │   ├── DailySummary.java
-│   │   ├── MonthlySummary.java
-│   │   ├── SourceType.java
-│   │   └── repositories/
-│   └── user/               
-│       ├── User.java  
-│       └── repositories/
-├── application/            # 애플리케이션 영역
+├── domain/                # 도메인 영역
+│   ├── activity/           
+│   ├── user/ 
+│   └── common/                  
+│        
+├── application/           # 애플리케이션 영역
 │   ├── activity/          
 │   ├── user/              
 │   └── aggregation/       # 집계 서비스
-├── infrastructure/         # 인프라 영역
-│   ├── activity/          
-│   └── user/              
+│
+├── infrastructure/        # 인프라 영역
+│   ├── activity/
+│   ├── user/          
+│   └── security/          # 암호화 구현체
+│             
 ├── interfaces/            # 인터페이스 영역
 │   ├── activity/          
-│   └── user/              
-└── config/                # 설정 클래스
+│   └── user/ 
+│                          
+├── config/                # 설정 영역
+│
+└── support/               # 공통 지원 영역
 ```
 
 ## 핵심 프로세스 시퀀스 다이어그램

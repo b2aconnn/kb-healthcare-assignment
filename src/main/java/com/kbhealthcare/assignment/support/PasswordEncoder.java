@@ -1,4 +1,4 @@
-package com.kbhealthcare.assignment.common;
+package com.kbhealthcare.assignment.support;
 
 public interface PasswordEncoder {
     String encode(String rawPassword);

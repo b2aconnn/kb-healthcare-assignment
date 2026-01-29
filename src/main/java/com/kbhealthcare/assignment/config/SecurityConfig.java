@@ -1,7 +1,7 @@
 package com.kbhealthcare.assignment.config;
 
-import com.kbhealthcare.assignment.common.PasswordEncoder;
-import com.kbhealthcare.assignment.infrastructure.config.BcryptPasswordEncoderImpl;
+import com.kbhealthcare.assignment.support.PasswordEncoder;
+import com.kbhealthcare.assignment.infrastructure.security.BcryptPasswordEncoderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

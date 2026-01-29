@@ -1,7 +1,7 @@
 package com.kbhealthcare.assignment.application.user;
 
 import com.kbhealthcare.assignment.application.user.dto.*;
-import com.kbhealthcare.assignment.common.PasswordEncoder;
+import com.kbhealthcare.assignment.support.PasswordEncoder;
 import com.kbhealthcare.assignment.domain.user.User;
 import com.kbhealthcare.assignment.domain.user.UserRepository;
 import com.kbhealthcare.assignment.domain.user.dto.UserCreateInfo;

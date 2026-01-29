@@ -1,4 +1,4 @@
-package com.kbhealthcare.assignment.common;
+package com.kbhealthcare.assignment.support;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

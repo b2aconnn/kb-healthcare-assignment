@@ -1,6 +1,6 @@
-package com.kbhealthcare.assignment.infrastructure.config;
+package com.kbhealthcare.assignment.infrastructure.security;
 
-import com.kbhealthcare.assignment.common.PasswordEncoder;
+import com.kbhealthcare.assignment.support.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BcryptPasswordEncoderImpl implements PasswordEncoder {

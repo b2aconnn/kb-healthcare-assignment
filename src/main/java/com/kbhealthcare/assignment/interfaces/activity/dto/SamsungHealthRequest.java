@@ -1,6 +1,6 @@
 package com.kbhealthcare.assignment.interfaces.activity.dto;
 
-import com.kbhealthcare.assignment.common.DateTimeUtils;
+import com.kbhealthcare.assignment.support.DateTimeUtils;
 import com.kbhealthcare.assignment.domain.activity.dto.SamsungHealthCommand;
 import com.kbhealthcare.assignment.domain.activity.dto.SamsungHealthCommand.*;
 
