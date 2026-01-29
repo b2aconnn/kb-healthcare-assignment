@@ -12,8 +12,8 @@ public record SignUpResponse(
             UserCreateResult result) {
         return new SignUpResponse(
                 result.id(),
-                result.email(),
                 result.name(),
-                result.nickname());
+                result.nickname(),
+                result.email());
     }
 }
