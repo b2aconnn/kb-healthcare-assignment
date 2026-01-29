@@ -25,6 +25,8 @@ public class User extends BaseEntity {
 
     private String password;
 
+    private String recordkey;
+
     public static User create(UserCreateInfo info) {
         User user = new User();
         user.name = info.name();
@@ -33,5 +35,9 @@ public class User extends BaseEntity {
         user.password = info.password();
 
         return user;
+    }
+
+    public void updateRecordkey(String recordkey) {
+        this.recordkey = recordkey;
     }
 }

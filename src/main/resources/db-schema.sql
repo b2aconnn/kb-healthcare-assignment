@@ -12,6 +12,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
+    recordkey VARCHAR(255) NULL,
 
     UNIQUE KEY uk_user_nickname (nickname),
     UNIQUE KEY uk_user_email (email)

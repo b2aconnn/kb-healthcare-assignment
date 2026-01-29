@@ -8,7 +8,6 @@ public record UserCreateResult(
     String nickname,
     String email
 ) {
-    
     public static UserCreateResult from(User user) {
         return new UserCreateResult(
             user.getId(),

@@ -1,9 +1,6 @@
 package com.kbhealthcare.assignment.application.user;
 
-import com.kbhealthcare.assignment.application.user.dto.LoginCommand;
-import com.kbhealthcare.assignment.application.user.dto.LoginResult;
-import com.kbhealthcare.assignment.application.user.dto.UserCreateCommand;
-import com.kbhealthcare.assignment.application.user.dto.UserCreateResult;
+import com.kbhealthcare.assignment.application.user.dto.*;
 import com.kbhealthcare.assignment.common.PasswordEncoder;
 import com.kbhealthcare.assignment.domain.user.User;
 import com.kbhealthcare.assignment.domain.user.UserRepository;
@@ -14,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public UserCreateResult signup(UserCreateCommand command) {
         if (userRepository.existsByEmail(command.email())) {
             throw new IllegalArgumentException("Email already exists: " + command.email());
@@ -49,5 +46,19 @@ public class UserService {
         }
 
         return LoginResult.from(user);
+    }
+
+    @Transactional
+    public RecordKeyModifyResult updateRecordKey(RecordKeyModifyCommand command) {
+        User user = userRepository.findByEmail(command.email())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
+        if (userRepository.existsByRecordKey(command.recordKey())) {
+            throw new IllegalArgumentException("Recordkey already exists: " + command.recordKey());
+        }
+
+        user.updateRecordkey(command.recordKey());
+
+        return RecordKeyModifyResult.from(user);
     }
 }
