@@ -151,6 +151,7 @@ erDiagram
         varchar nickname UK
         varchar email UK
         varchar password
+        varchar recordkey
         datetime created_at
         datetime updated_at
     }
@@ -192,31 +193,34 @@ erDiagram
         datetime updated_at
     }
     
-    raw_health_data {
-        bigint id PK
-        varchar recordkey
-        enum source_type
-        longtext raw_data
-        datetime created_at
-    }
-    
-    users ||--o{ health_activity : "recordkey로 연관"
-    health_activity ||--o{ daily_summary : "집계 관계"
-    daily_summary ||--o{ monthly_summary : "집계 관계"
-    health_activity ||--o{ raw_health_data : "원본 데이터"
-    
-    health_activity {
-        UK (recordkey, period_from, period_to)
-    }
-    
-    daily_summary {
-        UK (recordkey, date)
-    }
-    
-    monthly_summary {
-        UK (recordkey, summary_month)
-    }
+    users ||--o{ health_activity : recordkey
+    users ||--o{ daily_summary : recordkey
+    users ||--o{ monthly_summary : recordkey
 ```
+
+### 테이블 설명
+
+#### users 테이블
+- 사용자 정보 저장
+- email과 nickname에 유니크 제약 조건
+
+#### health_activity 테이블
+- 원본 헬스 활동 데이터 저장
+- Samsung Health와 Apple Health 데이터 수집
+
+#### daily_summary 테이블
+- 일별로 집계된 헬스 데이터
+- health_activity를 기반으로 자동 집계
+
+#### monthly_summary 테이블
+- 월별로 집계된 헬스 데이터
+- daily_summary를 기반으로 자동 집계
+
+### 데이터 흐름
+
+1. 클라이언트가 health_activity 데이터 저장
+2. 시스템이 자동으로 daily_summary로 집계
+3. 시스템이 자동으로 monthly_summary로 집계
 
 ## 데이터 조회 결과 제출
 ./aggerate 폴더에 csv 파일로 저장
@@ -229,25 +233,25 @@ erDiagram
 ```
 com.kbhealthcare.assignment/
 ├── domain/                  # 도메인 영역
-│   ├── activity/           # 헬스 활동 도메인
+│   ├── activity/          
 │   │   ├── HealthActivity.java
 │   │   ├── DailySummary.java
 │   │   ├── MonthlySummary.java
 │   │   ├── SourceType.java
 │   │   └── repositories/
-│   └── user/               # 사용자 도메인
-│       ├── User.java
+│   └── user/               
+│       ├── User.java  
 │       └── repositories/
 ├── application/            # 애플리케이션 영역
-│   ├── activity/          # 헬스 활동 서비스
-│   ├── user/              # 사용자 서비스
+│   ├── activity/          
+│   ├── user/              
 │   └── aggregation/       # 집계 서비스
 ├── infrastructure/         # 인프라 영역
-│   ├── activity/          # 헬스 활동 레포지토리 구현
-│   └── user/              # 사용자 레포지토리 구현
+│   ├── activity/          
+│   └── user/              
 ├── interfaces/            # 인터페이스 영역
-│   ├── activity/          # 헬스 활동 컨트롤러
-│   └── user/              # 사용자 컨트롤러
+│   ├── activity/          
+│   └── user/              
 └── config/                # 설정 클래스
 ```
 
