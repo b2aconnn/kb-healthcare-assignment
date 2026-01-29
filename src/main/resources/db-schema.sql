@@ -1,8 +1,8 @@
+DROP TABLE IF EXISTS raw_health_data;
 DROP TABLE IF EXISTS monthly_summary;
 DROP TABLE IF EXISTS daily_summary;
 DROP TABLE IF EXISTS health_activity;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS raw_health_data;
 
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -45,7 +45,7 @@ CREATE TABLE daily_summary (
 
     KEY idx_daily_summary_recordkey (recordkey),
     KEY idx_daily_summary_date (date),
-    CONSTRAINT uk_daily_summary_record_date UNIQUE (recordkey, date)
+    UNIQUE KEY uk_daily_summary_record_date (recordkey, date)
 );
 
 
@@ -61,14 +61,6 @@ CREATE TABLE monthly_summary (
     updated_at DATETIME(6) NOT NULL,
 
     KEY idx_monthly_summary_recordkey (recordkey),
-    KEY idx_monthly_summary_month (summary_month),
-    CONSTRAINT uk_monthly_summary_record_month UNIQUE (recordkey, summary_month)
-);
-
-CREATE TABLE raw_health_data (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    recordkey VARCHAR(255) NOT NULL,
-    source_type ENUM('SAMSUNG', 'APPLE') NOT NULL,
-    raw_data LONGTEXT NOT NULL,
-    created_at DATETIME(6) NOT NULL
+    KEY idx_monthly_year_month (summary_month),
+    UNIQUE KEY uk_monthly_summary_record_month (recordkey, summary_month)
 );
