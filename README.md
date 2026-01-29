@@ -103,12 +103,12 @@ Content-Type: application/json
 }
 ```
 
-#### 일별 요약 조회
+#### 일별 집계 조회
 ```http
 localhost:8080/api/activities/daily?recordkey=7836887b-b12a-440f-af0f-851546504b13&fromDate=2024-01-01&toDate=2024-12-31
 ```
 
-#### 월별 요약 조회
+#### 월별 집계 조회
 ```http
 localhost:8080/api/activities/monthly?recordkey=7836887b-b12a-440f-af0f-851546504b13&fromDate=2024-01-01&toDate=2024-12-31
 ```
@@ -139,68 +139,6 @@ Content-Type: application/json
 }
 ```
 
-## 데이터베이스 설계
-
-### ERD
-
-```mermaid
-erDiagram
-    users {
-        bigint id PK
-        varchar name
-        varchar nickname UK
-        varchar email UK
-        varchar password
-        varchar recordkey
-        datetime created_at
-        datetime updated_at
-    }
-    
-    health_activity {
-        bigint id PK
-        varchar recordkey
-        int steps
-        decimal calories
-        decimal distance
-        datetime period_from
-        datetime period_to
-        enum source_type
-        datetime created_at
-        datetime updated_at
-    }
-    
-    daily_summary {
-        bigint id PK
-        varchar recordkey
-        date date
-        int total_steps
-        decimal total_calories
-        decimal total_distance
-        enum source_type
-        datetime created_at
-        datetime updated_at
-    }
-    
-    monthly_summary {
-        bigint id PK
-        varchar recordkey
-        varchar summary_month
-        int total_steps
-        decimal total_calories
-        decimal total_distance
-        enum source_type
-        datetime created_at
-        datetime updated_at
-    }
-    
-    users ||--o{ health_activity : recordkey
-    users ||--o{ daily_summary : recordkey
-    users ||--o{ monthly_summary : recordkey
-```
-
-## 데이터 조회 결과 제출
-./aggerate 폴더에 csv 파일로 저장
-
 
 ## 프로젝트 구조 설명
 
@@ -229,6 +167,47 @@ com.kbhealthcare.assignment/
 │   ├── activity/          
 │   └── user/              
 └── config/                # 설정 클래스
+```
+
+## 핵심 프로세스 시퀀스 다이어그램
+
+### 헬스 데이터 저장 프로세스 (Activity 데이터 저장, 일별 집계 저장)
+(* 원본 데이터 저장은 구현하지 않았지만 필요하다고 생각합니다.)
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Controller as ActivityController
+    participant Service as HealthActivityService
+    participant Repo as HealthActivityRepository
+    participant AggService as AggregationService
+    participant DailyRepo as DailySummaryRepository
+
+    Client->>Controller: POST /api/activities/samsung
+    Controller->>Service: saveSamsungHealthData(command)
+    Service->>Repo: bulkInsertIgnore(activities)
+    Service->>AggService: aggregateDaily(activities)
+    AggService-->>Service: Map<LocalDate, DailySummary>
+    Service->>DailyRepo: updateDailySummaries(dailySummaries)
+    Service-->>Controller: ActivityCreateResult
+    Controller-->>Client: 201 Created
+```
+
+### 월별 집계 프로세스
+
+```mermaid
+sequenceDiagram
+    participant Scheduler as MonthlyAggregationScheduler
+    participant Service as HealthActivityService
+    participant DailyRepo as DailySummaryRepository
+    participant DB as Database
+
+    Scheduler->>Service: aggregateMonthly(lastMonth)
+    Service->>DailyRepo: saveAggregateMonthlyData(startDate, endDate)
+    DailyRepo->>DB: INSERT INTO monthly_summary ... FROM daily_summary
+    DB-->>DailyRepo: affected rows
+    DailyRepo-->>Service: affectedRows
+    Service-->>Scheduler: completion
 ```
 
 ### 클래스 다이어그램
@@ -365,3 +344,65 @@ classDiagram
     DailySummaryRepositoryImpl ..|> DailySummaryRepository
     MonthlySummaryRepositoryImpl ..|> MonthlySummaryRepository
 ```
+
+## 데이터베이스 설계
+
+### ERD
+
+```mermaid
+erDiagram
+    users {
+        bigint id PK
+        varchar name
+        varchar nickname UK
+        varchar email UK
+        varchar password
+        varchar recordkey
+        datetime created_at
+        datetime updated_at
+    }
+    
+    health_activity {
+        bigint id PK
+        varchar recordkey
+        int steps
+        decimal calories
+        decimal distance
+        datetime period_from
+        datetime period_to
+        enum source_type
+        datetime created_at
+        datetime updated_at
+    }
+    
+    daily_summary {
+        bigint id PK
+        varchar recordkey
+        date date
+        int total_steps
+        decimal total_calories
+        decimal total_distance
+        enum source_type
+        datetime created_at
+        datetime updated_at
+    }
+    
+    monthly_summary {
+        bigint id PK
+        varchar recordkey
+        varchar summary_month
+        int total_steps
+        decimal total_calories
+        decimal total_distance
+        enum source_type
+        datetime created_at
+        datetime updated_at
+    }
+    
+    users ||--o{ health_activity : recordkey
+    users ||--o{ daily_summary : recordkey
+    users ||--o{ monthly_summary : recordkey
+```
+
+## 데이터 조회 결과 제출
+./aggerate 폴더에 csv 파일로 저장
